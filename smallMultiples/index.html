@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<title>Linked Small Multiple Choropleth Maps</title>
+	<title>Poverty in Passaic County</title>
 
 	<!-- CSS -->
 	<!-- Bootstrap -->
@@ -37,9 +37,9 @@
 					<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></a>
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="../shortbio.html">About</a></li>
-							<li><a href="../files/koylu_cv_23.pdf">Resume</a></li>
+							<li><a href="../files/Resume.pdf">Resume</a></li>
 							<li class="divider"></li>
-							<li><a href="caglar-koylu@uiowa.edu">Contact</a></li>
+							<li><a href="tylerwatters@uiowa.edu">Contact</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -53,12 +53,12 @@
 	<div class="container">
 		<div class="content">
 			<div class="row">
-					<h1>Cancer in Iowa</h1>
+					<h1>Poverty Affliction in Passaic County, New Jersey</h1>
 			</div>
 			<hr />
 			<div class="row">
 				<div class="col-sm-4">
-					<p>Data from <a href="data.iowa.gov">Data.Iowa.gov</a>, maps by Ryan Larson & Caglar Koylu.</p>
+					<p>Data from <a href="https://www.ers.usda.gov/data-products/food-access-research-atlas/">Ers.usda.gov</a>, maps by Tyler Watters.</p>
 				</div>
 				<div class='col-sm-8 mapButtons'>
 					<span class="pull-right">
@@ -82,12 +82,12 @@
 			<br />
 			<div class="row">
 				<div class="col-sm-6">
-					<span><p><h3 class='mapTitle'>Lung Cancer</h3>Yearly average number of deaths from lung cancer per 10,000.</p></span>
+					<span><p><h3 class='mapTitle'>SNAP Beneficiaries</h3>Percent of homes using the Supplemental Nurtrition Assistance Program.</p></span>
 					<div id="divMap1"></div>
 					<div id="divHist1"></div>
 				</div>
 				<div class="col-sm-6">
-					<h3 class='mapTitle'>Adult Smokers</h3><p>Percentage of adult population who smoke.</p>
+					<h3 class='mapTitle'>Povert Rate</h3><p>Percentage of tract that is below the poverty line ($41,400 for a household of 4).</p>
 					<div id="divMap2"></div>
 					<div id="divHist2"></div>
 				</div>
@@ -95,12 +95,12 @@
 
 			<div class="row">
 				<div class="col-sm-6">
-					<h3 class='mapTitle'>Healthcare Cost</h3><p>Average cost of healthcare.</p>
+					<h3 class='mapTitle'>Vehicle Ownership</h3><p>Percent of homes that have a personally owned vehicle.</p>
 					<div id="divMap3"></div>
 					<div id="divHist3"></div>
 				</div>
 				<div class="col-sm-6">
-					<h3 class='mapTitle'>Senior Citizens</h3><p>Percentage of population above 65 years old.</p>
+					<h3 class='mapTitle'>Median Income</h3><p>Median Family Income</p>
 					<div id="divMap4"></div>
 					<div id="divHist4"></div>
 				</div>
@@ -116,7 +116,7 @@
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 	// TODO: Change the variables below to customize the small multiples interface for your data
-	var polygonJSONFile = 'data/out.geojson'
+	var polygonJSONFile = 'data/PassaicFARAD.geojson'
 	// change the projection if needed *d3.geoAlbers()*
 	var projection = d3.geoAlbers();
 	var widthheightRatio = 0.4;
@@ -127,10 +127,10 @@
 	var legendX = 0.84, legendY = 0.5
 
 	// id attribute and the name attribute to be used in the tooltip
-	var idAttribute = 'FIPS', nameAttribute = 'County';
+	var idAttribute = 'GEOID', nameAttribute = 'GEOID';
 
 	// Find the abbreviations of color names from https://colorbrewer2.org/
-	var colors =  colorbrewer.YlOrBr;
+	var colors =  colorbrewer.Greens;
 
 	// Chart/map attributes (variables) and formats based on the divs defined above
 	// For attribute 1 (the same for all others), see the description of the parameters below.
@@ -139,17 +139,17 @@
 	// att1format: enter the d3.format string to display the variables in the format you like
 	// Check this link on how to specify the desired format:
 	// https://observablehq.com/@d3/d3-format
-	var att1 = 'lungDeathPerYear', att1alias = 'Lung Cancer Death Density per 10,000', att1format = '.0f',
-	att2 = 'pctSmokers', att2alias =  '% Smokers', att2format = '.0f',
-	att3 = 'healthCosts', att3alias = '$ Spent', att3format = '.0f',
-	att4 = 'numSr', att4alias = '% 65+', att4format = '.0f';
+	var att1 = 'PassaicFARAD_TractSNAP', att1alias = '% Homes using SNAP benefits', att1format = '.0f',
+	att2 = 'PassaicFARAD_PovertyRate', att2alias =  '% Under Poverty Line', att2format = '.0f',
+	att3 = 'PassaicFARAD_TractHUNV', att3alias = '% Homes with a vehicle', att3format = '.0f',
+	att4 = 'PassaicFARAD_MedianFamilyIncome', att4alias = 'Median Family Income', att4format = '.0f';
 
   // enter below all variables that should be normalized. If you would like to multiple the variables
 	// with a constant value enter them in multiplyBy array. If there is no need for multiplication,
 	// simply enter 1 for each value in multiplyBy.
-  var attributesToBeNormalized = [att1, att4];
-	var multiplyBy = [10000, 100];
-	var divideBy = ['Population', 'Population'];
+  var attributesToBeNormalized = [att1, att3];
+	var multiplyBy = [100, 100];
+	var divideBy = ['PassaicFARAD_OHU2010', 'PassaicFARAD_OHU2010'];
 	// if your variables are not raw counts and they are already normalized, comment out above, and
 	//uncomment below:
 	// var attributesToBeNormalized = [];
