@@ -78,12 +78,12 @@
         <script>
 
         // var topoJSONFile = "data/conusFile.json";
-        var topoJSONFile = "data/conusFile.geojson";
+        var topoJSONFile = "data/conusFileCorrected.geojson";
         // enter the desired projection - note that input geojson has to be in WGS84 GCS
-        var projection = d3.geoTransverseMercator().rotate([87,0]);
+        var projection = d3.geoAlbers();
         //enter the name of the feature or geometry collection within the topoJSONFile
         // for example, for the default dataset us.objects.polygons, enter polygons
-        var featureCollection = "conusFile";
+        var featureCollection = "conusFileCorrected";
         // id field in the topojson file
         var idfield = "code"
         var csvFile = "data/MedianIncomeData.csv";
