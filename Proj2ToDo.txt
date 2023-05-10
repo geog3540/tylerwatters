@@ -1,0 +1,3 @@
+Compress MHA geojson to below 50MB
+See if I can overlay the 2 geojsons on top of eachother
+Work it so they can highlight attributes on mouseover
