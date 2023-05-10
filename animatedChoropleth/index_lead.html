@@ -55,8 +55,8 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Percent Children Screened With Elevated Blood Lead Level in Chicago 1999 - 2013 by Community Area</h1>
-              <span class="post-meta">Posted on May 15, 2020</span>
+              <h1>Median Income and MHA rates by state per year.</h1>
+              <span class="post-meta"></span>
             </div>
           </div>
         </div>
@@ -71,9 +71,9 @@
         <svg width="960" height="600"></svg>
         <h3 id="using-the-map">Using the Map</h3>
         <ol>
-          <li>The map will animate automatically to show unemployment rates by county from 1990 to 2017.</li>
+          <li>The map will animate automatically to show median income by state from 2016 to 2020.</li>
           <li>At any point, you can hover over the year label (on the right side) to stop the animation.  Moving your cursor horizontally over the year label will automatically update the year that is shown on the choropleth (move left to decrease the year, right to increase the year).</li>
-          <li>Hover over a county to see a tooltip providing the county name and the unemployment rate in that year.</li>
+          <li>Hover over a state to see a tooltip providing the state name and the median income in that year.</li>
         </ol>
         <script>
 
@@ -85,13 +85,13 @@
         // for example, for the default dataset us.objects.polygons, enter polygons
         var featureCollection = "conusFileCorrected";
         // id field in the topojson file
-        var idfield = "code"
+        var idfield = "GEOID"
         var csvFile = "data/MedianIncomeData.csv";
         var attributeAlias = "Median Income";
 
         // enter the minimum and maximum values of the attribute over years
         // one legend is created based on equal interval classification for all years.
-        var min = 40000, max = 90000;
+        var min = 41754, max = 87063;
 
         //enter the beginning year or date/time of animation.
         var beginTime = 2016, endTime = 2020;
@@ -101,7 +101,7 @@
         var width = 960;
 
         // Find the abbreviations of color names from https://colorbrewer2.org/
-        var colors =  colorbrewer.Reds;
+        var colors =  colorbrewer.Greens;
         var numOfClasses = 5;
 
         //DO NOT CHANGE ANYTHING BELOW THIS POINT UNLESS YOU KNOW WHAT YOU ARE DOING
@@ -205,6 +205,8 @@
           .enter()
           .append("path")
           .attr("d", path)
+          .attr('stroke', 'black')
+          .attr('stroke-width', 0.5)
           .call(style,currentYear);
 
           function style(polygons, year){
@@ -216,7 +218,7 @@
 
             newunemployment.forEach(function(d) {
               rateById[d.code] = +d.rate;
-              nameById[d.code] = d.name;
+              nameById[d.code] = d.NAME;
             });
 
             polygons.style("fill", function(d){
@@ -226,7 +228,7 @@
               div.transition()
               .duration(200)
               .style("opacity", .9);
-              div.html(nameById[d.id] + ' in ' + Math.round(currentYear) +': <br><strong>' + rateById[d.id] + '%</strong>')
+              div.html(nameById[d.id] + ' in ' + Math.round(currentYear) +': <br><strong>' + rateById[d.id])
               .style("left", (d3.event.pageX) + "px")
               .style("top", (d3.event.pageY - 28) + "px");})
               // fade out tooltip on mouse out
